@@ -1,0 +1,11 @@
+# Data (too large for GitHub; README explains how to download)
+data/raw/
+data/processed/
+
+# R files
+.Rhistory
+.RData
+.Rproj.user/
+
+# Mac
+.DS_Store
