@@ -104,6 +104,29 @@ No sample stands out as unusually low, and the groups are well mixed in the sort
 - **Interpretation note:** Significance doesn't imply a large change; many genes may have
   small fold changes. Some changes may also reflect landing and dissection timing.
 
+## Step 6: Visualization and top genes
+
+- **Effect sizes:** Of 4,234 significant genes, 306 changed at least 2-fold (160 up, 146 down
+  in Flight). Most changes are modest; e.g., Clpx is the 2nd most significant gene but
+  changed less than 2x.
+- **Heatmap:** The top 30 genes cluster samples perfectly into Flight and Ground, with
+  consistent patterns across mice. F8 and F9 show the strongest changes, matching the PCA.
+
+### Top genes
+- **Pnmt** (up ~16x): enzyme that makes adrenaline; increased by stress hormones.
+- **Clpx** (up ~1.9x): mitochondrial protein-quality-control enzyme.
+- **Nmrk2** (down ~15x): muscle-specific gene for making NAD+, needed for energy production.
+- **Lcn2** (up ~14x): inflammation and stress-response protein.
+- **Fkbp5** (up ~2.5x): classic marker of stress hormone (glucocorticoid) signaling.
+
+### Emerging hypothesis
+Several top genes (Fkbp5, Pnmt, Lcn2, Cdkn1a, Sesn1) respond to stress hormones, suggesting
+a strong stress signature in Flight mice. Because mice were dissected the day after
+splashdown and transport, part of this signal may reflect the return to Earth rather than
+microgravity alone. Dbp (circadian clock gene, down ~4x) may reflect circadian disruption
+or differences in dissection timing. To test in Step 7 with pathway analysis.
+
+
 
 
 ## Decisions log
