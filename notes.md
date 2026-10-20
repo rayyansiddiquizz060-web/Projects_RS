@@ -127,6 +127,34 @@ microgravity alone. Dbp (circadian clock gene, down ~4x) may reflect circadian d
 or differences in dissection timing. To test in Step 7 with pathway analysis.
 
 
+## Step 7: Pathway analysis (GSEA)
+
+- **Method:** Pre-ranked GSEA (gseapy) on DESeq2 Wald statistics, MSigDB 2026.2.Mm.
+- **Hallmark results:** 35 pathways at FDR < 0.25 (6 up, 29 down in Flight); 13 at FDR < 0.05
+  (1 up, 12 down).
+- **Main themes:**
+  - Immune/inflammatory signaling down (TNFA via NFKB, IL6/JAK/STAT3, interferon gamma,
+    IL2/STAT5, allograft rejection, complement).
+  - Growth signaling down: mTORC1 (FDR 0.027) and PI3K/AKT/mTOR (FDR 0.044). mTOR drives
+    muscle protein synthesis, consistent with spaceflight muscle loss.
+  - Structural and support pathways down: apical junction (top pathway, NES −1.85),
+    EMT/extracellular matrix, angiogenesis, hypoxia, myogenesis (FDR 0.09).
+  - Metabolism up: bile acid metabolism (FDR 0.022), xenobiotic metabolism, peroxisome.
+- **Stress-hormone hypothesis:** Partly supported. Inflammation was down, not up, but
+  glucocorticoids are anti-inflammatory, so stress-hormone markers up (Fkbp5, Pnmt) plus
+  inflammation down is consistent with a glucocorticoid response. Sesn1 (up) inhibits
+  mTORC1 (down). However, the GO glucocorticoid-response pathway was not significant
+  (NES +1.29, FDR 0.43), possibly because these sets mix induced and repressed genes.
+- **Circadian:** Weak evidence of circadian genes down (circadian regulation of gene
+  expression NES −1.58, FDR 0.15), consistent with Dbp down.
+- **Caution:** Some Hallmark names (e.g., spermatogenesis) reflect where gene sets were
+  defined, not muscle function; not interpreted literally.
+- **Oxidative phosphorylation:** No change (Hallmark NES −0.57, FDR 0.997). This differs from
+  a 2026 preprint reanalysis that reported strong OXPHOS suppression in this dataset
+  (NES −2.17). Likely reasons: different gene set (MitoCarta OXPHOS vs Hallmark), counts file
+  (STAR vs RSEM rRNA-removed), and gene filter (≥10 counts in 3 vs 9 samples). That preprint
+  itself concluded mitochondrial results are method-sensitive.
+
 
 
 ## Decisions log
