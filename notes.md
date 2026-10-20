@@ -75,17 +75,34 @@ No sample stands out as unusually low, and the groups are well mixed in the sort
 
 ## Step 4: Quality control
 
+- **ERCC removal:** Removed 92 ERCC spike-in controls before filtering. These are synthetic
+  RNA controls, not mouse genes (see Decisions log).
 - **Gene filtering:** Kept genes with ≥10 reads in ≥9 samples (the size of one group, so
-  genes active in only one group survive). Kept 16,115 of 56,924 genes.
+  genes active in only one group survive). Kept 16,054 of 56,832 genes.
 - **Library sizes:** 68–103 million reads per sample, similar between groups. No sample flagged.
-- **PCA:** Flight and Ground separate completely along PC1 (43.4% of variance), indicating a
-  strong group effect. Flight samples are more spread out on PC2 (13.3%), suggesting more
-  variable responses among flight mice.
+- **PCA:** Flight and Ground separate completely along PC1 (41.8% of variance), indicating a
+  strong group effect. This is down slightly from 43.4% with spike-ins included, so the
+  separation is driven by real gene expression, not the spike-ins. Flight samples are more
+  spread out on PC2 (13.9%), suggesting more variable responses among flight mice.
 - **Correlation heatmap:** Hierarchical clustering splits samples perfectly into Flight and
   Ground. F9 is least similar to Ground samples; G1 and G8 are slightly less similar to other
-  Ground samples.
+  Ground samples. Results were unchanged after removing spike-ins.
 
 
+## Step 5: Differential expression (DESeq2)
+
+- **Design:** ~ condition, with Ground as the reference (positive log2FC = higher in Flight).
+- **Results at adjusted p < 0.05:** 4,234 significant genes out of 16,054 tested (26%):
+  2,179 up and 2,055 down in Flight.
+- **ERCC check:** Before removing spike-ins, 4,293 genes were significant; nearly all 61
+  spike-ins that passed filtering were among them. Top real genes were unchanged after removal.
+- **Outliers:** 0 genes flagged by Cook's distance, supporting the decision to keep all samples.
+- **Largest effects in the top 10:** ENSMUSG00000038216 (log2FC +4.0, ~16x up),
+  ENSMUSG00000004939 (−3.9, ~15x down), ENSMUSG00000026822 (+3.8, ~14x up).
+- **Comparison:** A 2026 reanalysis of this dataset reported ~4,400 significant genes; my
+  result is consistent (difference likely due to my stricter filter and spike-in removal).
+- **Interpretation note:** Significance doesn't imply a large change; many genes may have
+  small fold changes. Some changes may also reflect landing and dissection timing.
 
 
 
