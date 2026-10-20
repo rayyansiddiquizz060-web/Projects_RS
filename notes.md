@@ -48,9 +48,6 @@ GSEA uses all genes ranked, not just ones past an arbitrary cutoff. That means i
 Flight mice experience more than microgravity: space radiation, launch and landing stress, higher CO₂ levels on the ISS, different handling, and sometimes different timing or methods of tissue collection. Any of these could cause stress responses. The experiment shows what changed with spaceflight as a whole, not microgravity specifically. Stating this clearly in your README’s limitations section shows good scientific judgment.
 
 
-## Decisions log
-(You'll add entries here starting in Step 2, like which study you chose and why.)
-
 
 ## Step 3: Data Exploration
 
@@ -75,3 +72,74 @@ The decimals are small relative to the counts (e.g., 87.51 vs. 115.0), so roundi
 Across all 27 samples, total reads range from 68.1 million (RR23_R-TA_GC_G6) to 116.4 million (RR23_R-TA_VIV_V7), a 1.71x difference. For the two groups I’m analyzing (Flight and Ground Control), the range is 68.1 million to 102.5 million (RR23_R-TA_FLT_F5), about 1.5x.
 
 No sample stands out as unusually low, and the groups are well mixed in the sorted list. Flight and Ground Control have similar median depths (about 86.6 and 84.7 million), so neither group was sequenced systematically deeper. These modest depth differences are what normalization corrects for before comparing samples.
+
+## Step 4: Quality control
+
+- **Gene filtering:** Kept genes with ≥10 reads in ≥9 samples (the size of one group, so
+  genes active in only one group survive). Kept 16,115 of 56,924 genes.
+- **Library sizes:** 68–103 million reads per sample, similar between groups. No sample flagged.
+- **PCA:** Flight and Ground separate completely along PC1 (43.4% of variance), indicating a
+  strong group effect. Flight samples are more spread out on PC2 (13.3%), suggesting more
+  variable responses among flight mice.
+- **Correlation heatmap:** Hierarchical clustering splits samples perfectly into Flight and
+  Ground. F9 is least similar to Ground samples; G1 and G8 are slightly less similar to other
+  Ground samples.
+
+
+
+
+
+## Decisions log
+
+### Study choice
+**Chose OSD-576** (Rodent Research-23, right tibialis anterior muscle, ~38 days on the ISS).
+- Reasons: strong differential expression signal in prior reanalysis, 9 mice per group,
+  and muscle results are more consistent across missions than liver or retina.
+- Ruled out: OSD-242 (ground controls from a different cohort), OSD-173 (13-day flight,
+  collected hours after landing), OSD-137 (weaker, mixed liver signal), and
+  OSD-326 / OSD-255 (couldn't verify design details).
+- Limitations: mice were returned to Earth alive before dissection, and groups were
+  dissected on different days (Flight Jan 14, Ground Control Jan 17, Vivarium Jan 20, 2021),
+  so landing and timing effects may be mixed with spaceflight effects.
+
+### Groups
+**Comparing 9 Space Flight vs 9 Ground Control (habitat).**
+- Excluding the 9 Vivarium controls, because they lived in standard cages rather than
+  the same habitat hardware as the flight mice.
+
+### Sex
+**All male** (confirmed in the OSDR sample table).
+- A 2026 PLOS ONE paper described these mice as female, but the OSDR metadata says male.
+  Using OSDR as the source of truth.
+
+### Counts file
+**GLDS-570_rna_seq_RSEM_Unnormalized_Counts_rRNArm_GLbulkRNAseq.csv**
+- Using RSEM counts with ribosomal RNA genes removed, because leftover rRNA varies
+  between samples and can distort normalization.
+- Note: the file uses the ID GLDS-570 while the study is OSD-576. OSDR uses two ID
+  systems that don't always match; confirmed the file is from the OSD-576 study page.
+- Did not use normalized counts, because DESeq2 requires raw counts.
+
+### Data handling
+- **Rounding:** 5,785 genes contain decimal values (RSEM expected counts). Will round to
+  integers before DESeq2, which requires whole-number counts.
+- **Zero-count genes:** 20,976 genes are zero in all samples. Will filter these out
+  (along with very low-count genes) during QC.
+- **Sequencing depth:** Flight and Ground Control have similar median depths
+  (~86.6M and ~84.7M reads), and no sample is unusually low. No samples excluded.
+
+### Sample sheet
+**Built data/samples.csv** from the OSDR sample table: 9 Flight and 9 Ground samples.
+- Verified all sample names exist in the counts table and that group labels match
+  the codes in the sample names (FLT, GC).
+
+  ### Outliers
+**Kept all 18 samples.** No sample crosses into the other group on PCA, and none has an
+unusual library size. F9 is the most extreme Flight sample, but its difference goes in the
+same direction as the spaceflight effect, suggesting biology rather than a technical problem.
+Removing samples without a technical reason risks making results look cleaner than they are.
+
+### Caveat on group separation
+The PC1 separation reflects all differences between groups, not only spaceflight: Flight mice
+returned to Earth before dissection and were dissected on a different day (Jan 14) than
+Ground Controls (Jan 17).
